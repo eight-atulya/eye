@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+/* Handle browser extension interference with hydration */
+body[data-hydrated="false"] {
+  /* Ensure consistent styling during hydration */
+  background-color: white;
+  color: #111827;
+}
+
+/* Override extension-added classes that cause hydration mismatches */
+body.clickup-chrome-ext_installed,
+body.chrome-extension-installed,
+body.browser-extension-active,
+body.ext-installed {
+  /* Reset to our intended styles */
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+

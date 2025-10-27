@@ -1,0 +1,173 @@
+# EYE - Single Source of Truth Configuration
+# Version: 0.1.0
+# Author: Anurag Atulya - EYE for Humanity
+
+# Application Metadata
+app:
+  name: "EYE"
+  version: "0.1.0"
+  description: "AI-first computer vision workspace"
+  author: "Anurag Atulya"
+  watermark: "EYE for Humanity — I love machines, AI, humans, coffee, leaf. 8 is my north star."
+
+# Environment Configuration
+environments:
+  development:
+    debug: true
+    log_level: "DEBUG"
+    reload: true
+    
+  production:
+    debug: false
+    log_level: "INFO"
+    reload: false
+
+# Service Configuration
+services:
+  backend:
+    port: 8001
+    host: "0.0.0.0"
+    workers: 1
+    timeout: 300
+    
+  frontend:
+    port: 3003
+    host: "localhost"
+    
+  database:
+    host: "db"
+    port: 5433
+    name: "vision"
+    user: "vision"
+    password: "vision"
+    
+  redis:
+    host: "redis"
+    port: 6380
+    db: 0
+    
+  minio:
+    host: "minio"
+    port: 9002
+    console_port: 9003
+    access_key: "miniokey"
+    secret_key: "miniopass123"
+    bucket: "training-data"
+    region: "us-east-1"
+    
+  prometheus:
+    port: 9090
+    
+  cvat:
+    host: "cvat"
+    port: 8080
+    username: "admin"
+    password: "admin"
+    webhook_secret: "change-me"
+    
+  ollama:
+    host: "ollama"
+    port: 11434
+    default_model: "gemma3:12b"
+    enable_gpu: true
+
+# ML/AI Configuration
+ml:
+  engines:
+    - name: "yolo"
+      type: "object_detection"
+      framework: "ultralytics"
+      
+    - name: "mmdetection"
+      type: "object_detection"
+      framework: "mmcv"
+      
+    - name: "detectron2"
+      type: "instance_segmentation"
+      framework: "pytorch"
+      
+    - name: "yolo_e"
+      type: "object_detection"
+      framework: "yolo_e"
+      max_classes: 4000
+      few_shot_learning: true
+      batch_processing: true
+      
+  gpu:
+    enabled: true
+    memory_limit: "8GB"
+    
+  training:
+    default_batch_size: 16
+    max_epochs: 100
+    learning_rate: 0.001
+    
+  yolo_e:
+    enabled: true
+    base_classes: 4000
+    few_shot_epochs: 50
+    confidence_threshold: 0.5
+    iou_threshold: 0.45
+    batch_size: 8
+    max_batch_size: 32
+    preprocessing:
+      image_size: [640, 640]
+      normalize: true
+    training:
+      learning_rate: 0.001
+      weight_decay: 0.0005
+      warmup_epochs: 5
+
+# Security Configuration
+security:
+  jwt:
+    secret_key: "change-me-in-production"
+    algorithm: "HS256"
+    access_token_expire_minutes: 60
+    
+  cors:
+    allowed_origins: ["http://localhost:3000"]
+    allowed_methods: ["GET", "POST", "PUT", "DELETE"]
+    allowed_headers: ["*"]
+
+# Monitoring Configuration
+monitoring:
+  prometheus:
+    enabled: true
+    scrape_interval: 15s
+    
+  health_checks:
+    enabled: true
+    interval: 30s
+    timeout: 10s
+
+# Storage Configuration
+storage:
+  datasets_path: "/app/storage/datasets"
+  outputs_path: "/app/storage/outputs"
+  weights_path: "/app/storage/weights"
+  
+  s3:
+    endpoint: "http://minio:9002"
+    use_ssl: false
+    verify: false
+
+# API Configuration
+api:
+  version: "v1"
+  prefix: "/api/v1"
+  rate_limit:
+    enabled: true
+    requests_per_minute: 100
+    
+  pagination:
+    default_page_size: 20
+    max_page_size: 100
+
+# Feature Flags
+features:
+  cvat_integration: true
+  gpu_training: true
+  model_deployment: true
+  real_time_monitoring: true
+

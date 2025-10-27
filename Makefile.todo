@@ -1,0 +1,99 @@
+SHELL := /bin/sh
+
+.PHONY: up down logs build clean generate-config validate-config
+
+# Configuration management
+generate-config:
+	python3 scripts/generate-config.py
+
+validate-config:
+	python3 -c "from config.settings import get_settings; print('Configuration valid:', get_settings().app_name)"
+
+# Docker operations using centralized config
+up: generate-config
+	docker-compose up -d --build
+
+down:
+	docker-compose down -v
+
+logs:
+	docker-compose logs -f --tail=200
+
+build:
+	docker-compose build --no-cache
+
+# Development
+dev: generate-config
+	docker-compose up --build
+
+dev-backend:
+	docker-compose exec backend uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+dev-frontend:
+	docker-compose exec frontend npm run dev
+
+# Health checks
+health:
+	@echo "Checking service health..."
+	@curl -f http://localhost:8000/health || echo "Backend not healthy"
+	@curl -f http://localhost:3000 || echo "Frontend not healthy"
+	@curl -f http://localhost:9000/minio/health/live || echo "MinIO not healthy"
+
+# Cleanup
+clean: down
+	docker system prune -f
+	docker volume prune -f
+
+clean-all: clean
+	docker image prune -f
+	docker network prune -f
+
+# Configuration management
+config-validate:
+	python3 -c "import yaml; yaml.safe_load(open('config/eye.yaml'))" && echo "YAML syntax valid"
+
+config-diff:
+	@echo "Comparing current vs backup compose files..."
+	@diff docker-compose.yml docker-compose.yml.backup || echo "Files differ"
+
+# Environment setup
+setup:
+	@echo "Setting up EYE development environment..."
+	@mkdir -p backend/.env frontend/.env.local config
+	@if [ ! -f backend/.env ]; then echo "Creating backend/.env..."; fi
+	@if [ ! -f frontend/.env.local ]; then echo "Creating frontend/.env.local..."; fi
+	@make generate-config
+	@echo "Setup complete. Run 'make up' to start services."
+
+# Help
+help:
+	@echo "EYE Development Commands:"
+	@echo ""
+	@echo "Configuration:"
+	@echo "  generate-config    Generate Docker Compose and env files from config/eye.yaml"
+	@echo "  validate-config    Validate configuration syntax"
+	@echo "  config-validate    Validate YAML syntax only"
+	@echo "  config-diff        Compare current vs generated compose files"
+	@echo ""
+	@echo "Docker Operations:"
+	@echo "  up                 Start all services (with config generation)"
+	@echo "  down               Stop all services and remove volumes"
+	@echo "  logs               Show logs from all services"
+	@echo "  build              Build all services"
+	@echo "  dev                Start services in development mode"
+	@echo "  health             Check health of all services"
+	@echo ""
+	@echo "Development:"
+	@echo "  dev-backend        Run backend with hot reload"
+	@echo "  dev-frontend       Run frontend with hot reload"
+	@echo ""
+	@echo "Cleanup:"
+	@echo "  clean              Stop services and clean up containers/volumes"
+	@echo "  clean-all          Full cleanup including images and networks"
+	@echo ""
+	@echo "Setup:"
+	@echo "  setup              Initial setup of development environment"
+	@echo "  help               Show this help message"
+
+# Default target
+.DEFAULT_GOAL := help

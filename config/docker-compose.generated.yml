@@ -1,0 +1,96 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 8001 --reload --reload-dir /app/backend
+    ports:
+    - 8001:8001
+    environment:
+    - PYTHONUNBUFFERED=1
+    - EYE_ENVIRONMENT=development
+    depends_on:
+    - db
+    - redis
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: npm run dev -- -p 3003
+    ports:
+    - 3003:3003
+    environment:
+    - NODE_ENV=development
+    - CHOKIDAR_USEPOLLING=true
+    - WATCHPACK_POLLING=true
+    - NEXT_PUBLIC_API_URL=http://localhost:8001
+    depends_on:
+    - backend
+    volumes:
+    - ./frontend:/app
+    - /app/node_modules
+  db:
+    image: postgres:16-alpine
+    environment:
+    - POSTGRES_USER=vision
+    - POSTGRES_PASSWORD=vision
+    - POSTGRES_DB=vision
+    ports:
+    - 5433:5433
+    volumes:
+    - pgdata:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    ports:
+    - 6380:6380
+    environment:
+    - REDIS_DB=0
+  minio:
+    image: minio/minio:RELEASE.2024-09-22T00-33-43Z
+    command: server /data --console-address ":9003"
+    environment:
+    - MINIO_ROOT_USER=miniokey
+    - MINIO_ROOT_PASSWORD=miniopass123
+    ports:
+    - 9002:9002
+    - 9003:9003
+    volumes:
+    - minio_data:/data
+    healthcheck:
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:9002/minio/health/live
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  prometheus:
+    build:
+      context: ./monitoring/prometheus
+      dockerfile: Dockerfile
+    ports:
+    - 9090:9090
+    depends_on:
+    - backend
+  worker:
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    working_dir: /app/orchestrator
+    command:
+    - python3.11
+    - -u
+    - workers/redis_worker.py
+    depends_on:
+    - redis
+    - minio
+    gpus: all
+    environment:
+    - NVIDIA_VISIBLE_DEVICES=all
+    - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    - EYE_ENVIRONMENT=development
+volumes:
+  pgdata: {}
+  minio_data: {}
+  cvat_db_data: {}

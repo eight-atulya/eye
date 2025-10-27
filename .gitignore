@@ -1,0 +1,272 @@
+# EYE Project - .gitignore
+# Comprehensive ignore patterns for Python, Node.js, Docker, and sensitive data
+
+# ===========================================
+# Python
+# ===========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+.venv
+venv/
+ENV/
+env/
+
+# ===========================================
+# Node.js / Frontend
+# ===========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+.next/
+out/
+.nuxt/
+.cache/
+.parcel-cache/
+.vscode-test/
+.yarn/
+.pnp.*
+
+# ===========================================
+# Frontend Build Outputs
+# ===========================================
+dist/
+build/
+.next/
+.vercel/
+*.tsbuildinfo
+.nuxt
+
+# ===========================================
+# Docker & Containers
+# ===========================================
+*.log
+docker-compose.override.yml
+.dockerignore
+
+# ===========================================
+# Environment Variables & Secrets
+# ===========================================
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+*.pem
+*.key
+*.crt
+secrets/
+credentials/
+.secrets/
+
+# ===========================================
+# Database & Data Files
+# ===========================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+*.sql
+pgdata/
+pgadmin/
+minio_data/
+ollama_data/
+faiss_index/
+uploads/
+storage/data/
+storage/uploads/
+
+# ===========================================
+# Model Files & Weights
+# ===========================================
+storage/weights/
+storage/weights/*.pt
+storage/weights/*.pth
+storage/weights/*.onnx
+storage/weights/*.h5
+storage/models/*.bin
+storage/models/*.safetensors
+*.model
+*.weights
+storage/datasets/
+storage/cache/
+
+# ===========================================
+# Logs & Temporary Files
+# ===========================================
+*.log
+logs/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.bak
+*.backup
+
+# ===========================================
+# IDE & Editor Files
+# ===========================================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+.bundle/
+.vscode-test/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# ===========================================
+# OS Specific
+# ===========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================================
+# Jupyter Notebooks
+# ===========================================
+.ipynb_checkpoints/
+*.ipynb
+
+# ===========================================
+# Testing
+# ===========================================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+test-results/
+playwright-report/
+test-results.xml
+
+# ===========================================
+# AI/ML Specific
+# ===========================================
+wandb/
+mlruns/
+.mlflow/
+tensorboard_logs/
+checkpoints/
+runs/
+*.hdf5
+*.pb
+*.tflite
+*.mlmodel
+
+# ===========================================
+# EYE Project Specific
+# ===========================================
+# Embedded repositories
+cvat-official/
+
+# User uploaded content
+storage/uploads/
+storage/user_data/
+storage/memories/
+
+# Temporary processing files
+tmp/
+temp/
+processing/
+*.jpg.tmp
+*.png.tmp
+
+# Local development overrides
+docker-compose.local.yml
+config.local.yaml
+local_config/
+
+# ===========================================
+# Documentation Builds
+# ===========================================
+docs/_build/
+docs/.doctrees/
+site/
+*.pdf
+
+# ===========================================
+# Package Lock Files (Optional - Uncomment to ignore)
+# ===========================================
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ===========================================
+# Backup Files
+# ===========================================
+*.orig
+*.rej
+*.patch
