@@ -12,7 +12,7 @@ Heavy Load Mode – for advanced users with high compute.
 
 Light Mode – optimized for basic inference and processing, similar to Google Photos or Apple Photos, so that even users with the slowest laptops can run it.
 
-God Mode – the full, super-intelligent version with everything unlocked.
+God Mode – the full, super-intelligent version with everything unlocked. Best Visual UI for the system.
 
 I’ll focus on integrating visualization and gamification libraries — I already have ideas ready for that.
 All the best to everyone working on this.
